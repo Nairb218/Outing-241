@@ -1,9 +1,7 @@
 // SUPABASE AUTHENTICATION
 const SUPABASE_URL = 'https://tkjpgygogszjfomxzfia.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRranBneWdvZ3N6amZvbXh6ZmlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxMTc0MjMsImV4cCI6MjA5MDY5MzQyM30.seko5qkbw7jOyB0esvd0NuF82mqxm0E9n6ZqMsLtUhs';
-const supabaseClient = globalThis.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// APP INITIALIZATION
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // 1. ADD NEW MEMBER
 async function addFriend() {
@@ -53,7 +51,7 @@ async function fetchFriends() {
 
     friends.forEach(f => {
         listContainer.innerHTML += `
-            <div class="friend-row flex flex-col md:flex-row items-center justify-between p-5">
+            <div class="bg-zinc-900/50 border border-zinc-800 flex flex-col md:flex-row items-center justify-between p-5 rounded-xl">
                 <div class="mb-4 md:mb-0 text-center md:text-left">
                     <h4 class="text-xl font-black text-white italic tracking-tighter uppercase">${f.name}</h4>
                     <p class="text-[10px] text-blue-500 font-bold uppercase tracking-[0.2em]">${f.notes || 'REGULAR MEMBER'}</p>
@@ -73,7 +71,7 @@ async function fetchFriends() {
     });
 }
 
-// 4. CALCULATE WAR CHEST
+// 4. CALCULATE TOTAL
 async function calculateTotal() {
     const { data, error } = await supabaseClient.from('contributions').select('amount');
     
@@ -83,6 +81,10 @@ async function calculateTotal() {
     document.getElementById('grand-total').innerText = `₱${total.toLocaleString()}`;
 }
 
-// BOOTSTRAP APP
-await fetchFriends();
-await calculateTotal();
+// INITIALIZE APP
+function init() {
+    fetchFriends();
+    calculateTotal();
+}
+
+init();

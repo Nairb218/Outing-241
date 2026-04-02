@@ -1,6 +1,3 @@
 {
-  "buildCommand": "",
-  "installCommand": "",
-  "outputDirectory": "budget-tracker/first-steps",
-  "public": true
+  "public": "budget-tracker/first-steps"
 }

@@ -31,7 +31,7 @@ async function addFriend() {
     const nameInput = document.getElementById('friend-name');
     const notesInput = document.getElementById('friend-notes');
 
-    if (!nameInput.value) return alert("Pangalan muna, boss.");
+    if (!nameInput.value) return;
 
     const { error } = await supabaseClient.from('friends').insert([
         { 
@@ -43,7 +43,6 @@ async function addFriend() {
 
     if (error) {
         console.error(error);
-        alert('Error adding member');
     } else {
         nameInput.value = '';
         notesInput.value = '';
@@ -59,10 +58,10 @@ async function recordAmbag(friendId, amount) {
 
     if (error) {
         console.error(error);
-        alert('Error logging contribution');
     } else {
-        // Realtime subscription will handle updates
-        alert(`₱${amount} logged for this member!`);
+        // Immediately update totals without waiting for subscription
+        calculateTotal();
+        fetchFriends();
     }
 }
 
@@ -105,7 +104,6 @@ async function fetchFriends() {
                         <span class="text-sm font-bold text-blue-400">— ₱${individualTotal.toLocaleString()}</span>
                     </div>
                     <p class="text-[10px] text-blue-500 font-bold uppercase tracking-[0.2em]">${f.notes || 'REGULAR MEMBER'}</p>
-                    ${f.individual_note ? `<p class="text-xs text-zinc-400 italic mt-1">"${f.individual_note}"</p>` : ''}
                 </div>
                 <div class="flex gap-3 w-full md:w-auto">
                     <button onclick="recordAmbag(${f.id}, 50)" 
@@ -161,10 +159,8 @@ async function deleteMember(friendId) {
 
         fetchFriends();
         calculateTotal();
-        alert('Member deleted successfully');
     } catch (error) {
         console.error(error);
-        alert('Error deleting member');
     }
 }
 
@@ -203,11 +199,9 @@ async function saveMemberNote() {
 
     if (error) {
         console.error(error);
-        alert('Error saving note');
     } else {
         closeMemberNoteModal();
         fetchFriends();
-        alert('Note saved!');
     }
 }
 
@@ -247,10 +241,8 @@ async function saveGlobalNotes() {
 
     if (error) {
         console.error(error);
-        alert('Error saving notes');
     } else {
         closeNotepadModal();
-        alert('Trip notes saved!');
     }
 }
 
